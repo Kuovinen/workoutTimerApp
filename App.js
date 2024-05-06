@@ -12,14 +12,39 @@ import Manager from "./components/Manager";
 
 export default function App() {
   const [times, setTimes] = React.useState([]);
+  const [timeValues, setTimeValues] = React.useState([]);
   const [counting, setCounting] = React.useState(false);
+
+  function reformatTimeValues(textTimes) {
+    const finalArray = [];
+    // {work: { min: "00", sec: "00" }, rest: { min: "00", sec: "00" }}
+    const minutesToMillis = (min) => min * 1000 * 60;
+    const secondsToMillis = (sec) => sec * 1000;
+    textTimes.forEach((el) => {
+      const wvalueMin = minutesToMillis(Number(el.work.min));
+      const wvalueSec = secondsToMillis(Number(el.work.sec));
+      const wtotal = wvalueMin + wvalueSec;
+      finalArray.push(wtotal);
+      const rvalueMin = minutesToMillis(Number(el.rest.min));
+      const rvalueSec = secondsToMillis(Number(el.rest.sec));
+      const rtotal = rvalueMin + rvalueSec;
+      finalArray.push(rtotal);
+    });
+    console.log(finalArray);
+    return finalArray;
+  }
+
+  React.useEffect(() => {
+    setTimeValues((or) => reformatTimeValues(times));
+  }, [times]);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.stripe}></View>
       {!counting ? (
         <Manager setCounting={setCounting} times={times} setTimes={setTimes} />
       ) : (
-        <Progressor setCounting={setCounting} times={times} />
+        <Progressor setCounting={setCounting} timeValues={timeValues} />
       )}
     </SafeAreaView>
   );

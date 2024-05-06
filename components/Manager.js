@@ -3,12 +3,11 @@ import { StyleSheet, Text, View, ScrollView } from "react-native";
 import NumInput from "./NumInput";
 import Button from "./Button";
 import st from "../utils/st";
-export default function Manager({ times, setTimes }) {
+export default function Manager({ times, setTimes, setCounting }) {
   const [restTime, setRestTime] = React.useState({ min: "00", sec: "00" });
   const [workTime, setWorkTime] = React.useState({ min: "00", sec: "00" });
   const scrollViewRef = React.useRef();
   function addTime() {
-    console.log(Number(restTime.min));
     if (
       Number(restTime.min) > 0 ||
       Number(restTime.sec) > 0 ||
@@ -86,7 +85,7 @@ export default function Manager({ times, setTimes }) {
               size={st.xxl}
               onPress={() => {
                 if (times.length) {
-                  props.setCounting((el) => !el);
+                  setCounting((el) => !el);
                 }
               }}
             />

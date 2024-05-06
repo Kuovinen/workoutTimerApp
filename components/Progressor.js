@@ -14,10 +14,12 @@ const PATTERN = [
   1 * ONE_SECOND_IN_MS,
   1 * ONE_SECOND_IN_MS,
 ];
-export default function Progressor(props) {
+export default function Progressor({ setCounting, timeValues }) {
+  const initialMinutes = Math.floor(timeValues[0] / 1000 / 60) % 60;
+  console.log(`Minutes to count ${initialMinutes}`);
   const [isPaused, setIsPaused] = React.useState(false);
   const [progress, setProgress] = React.useState(0.7);
-  const [minutes, setMinutes] = React.useState(0.1);
+  const [minutes, setMinutes] = React.useState(initialMinutes);
 
   const onEnd = (reset) => {
     Vibration.vibrate(PATTERN);
@@ -75,7 +77,7 @@ export default function Progressor(props) {
           <ButtonRound
             title={" NEW "}
             onPress={() => {
-              props.setCounting((el) => !el);
+              setCounting((el) => !el);
             }}
           />
         </View>
