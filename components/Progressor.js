@@ -16,7 +16,6 @@ const { height, width } = Dimensions.get("window");
 const S05_SECOND_IN_MS = 500;
 const S02_SECOND_IN_MS = 200;
 const S01_SECOND_IN_MS = 100;
-
 const PATTERN = [1 * S01_SECOND_IN_MS, 1 * S02_SECOND_IN_MS];
 const PATTERN2 = [
   1 * S01_SECOND_IN_MS,
@@ -25,32 +24,42 @@ const PATTERN2 = [
   1 * S05_SECOND_IN_MS,
 ];
 const PATTERN3 = [1 * S02_SECOND_IN_MS, 1 * S02_SECOND_IN_MS];
+
 export default function Progressor({
   setCounting,
   timeValues,
   setTimeValues,
   setTimes,
+  times,
 }) {
-  console.log(timeValues);
   const [isPaused, setIsPaused] = React.useState(false);
   const [progress, setProgress] = React.useState(1);
   const [amount, setAmount] = React.useState(1);
   const [yellow, setYellow] = React.useState(true);
-  console.log(`Amount ${amount}`);
+  const positionRef = React.useRef(0);
+
+  //create text based on current work/rest set
+  function makeStringPattern() {
+    const pos = Math.floor(positionRef.current);
+    const slot = times[pos];
+    return `${slot.rest.min}:${slot.rest.sec}/${slot.work.min}:${slot.work.sec}`;
+  }
+
   function onEnd() {
     Vibration.vibrate(PATTERN);
     setProgress(1);
     //otherwise move to the next element
-    console.log(`Setting ${timeValues} array to ${[...timeValues.slice(1)]}`);
+
     setYellow(!yellow);
     setTimeValues((original) => [...original.slice(1)]);
+    positionRef.current += 0.5;
   }
+
   //updates timer amounts as long as there's slots, else vibrate, reset and switch
   //screens:
   React.useEffect(() => {
     //end and switch screens if this was the last element
     if (timeValues.length === 0) {
-      console.log(Platform.OS);
       Vibration.vibrate(Platform.OS === "android" ? PATTERN2 : PATTERN3);
       setIsPaused(true);
       //recalculate values based on used up list
@@ -59,6 +68,7 @@ export default function Progressor({
     }
     setAmount(() => timeValues[0]);
   }, [timeValues]);
+
   return (
     <View style={styles.container}>
       <View style={styles.section1}>
@@ -76,7 +86,7 @@ export default function Progressor({
       </View>
       <View style={styles.section2}>
         <View style={styles.timer}>
-          <Text style={styles.currentTimeUnit}>{" 00:00 / 00:00 "}</Text>
+          <Text style={styles.currentTimeUnit}>{makeStringPattern()}</Text>
           <Countdown
             amount={amount}
             isPaused={isPaused}
