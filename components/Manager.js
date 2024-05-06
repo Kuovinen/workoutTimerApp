@@ -7,6 +7,7 @@ export default function Manager({ times, setTimes, setCounting }) {
   const [restTime, setRestTime] = React.useState({ min: "00", sec: "00" });
   const [workTime, setWorkTime] = React.useState({ min: "00", sec: "00" });
   const scrollViewRef = React.useRef();
+  //button on press function:
   function addTime() {
     if (
       Number(restTime.min) > 0 ||
@@ -24,6 +25,7 @@ export default function Manager({ times, setTimes, setCounting }) {
       return [...current.slice(0, -1)];
     });
   }
+
   return (
     <View style={styles.container}>
       <ScrollView

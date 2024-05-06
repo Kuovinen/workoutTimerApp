@@ -11,14 +11,12 @@ import Progressor from "./components/Progressor";
 import Manager from "./components/Manager";
 
 export default function App() {
-  console.log("render APP");
   const [times, setTimes] = React.useState([]);
   const [timeValues, setTimeValues] = React.useState([]);
   const [counting, setCounting] = React.useState(false);
 
   function reformatTimeValues(textTimes) {
     const finalArray = [];
-    // {work: { min: "00", sec: "00" }, rest: { min: "00", sec: "00" }}
     const minutesToMillis = (min) => min * 1000 * 60;
     const secondsToMillis = (sec) => sec * 1000;
     textTimes.forEach((el) => {
@@ -33,7 +31,7 @@ export default function App() {
     });
     return finalArray;
   }
-
+  //create array of time values as simple numbers from an array of object data
   React.useEffect(() => {
     setTimeValues((or) => reformatTimeValues(times));
   }, [times]);

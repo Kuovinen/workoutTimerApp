@@ -12,7 +12,7 @@ import st from "../utils/st";
 import Countdown from "./Countdown";
 import ButtonRound from "./ButtonRound";
 import ProgressStripe from "./ProgressStripe";
-
+//Constants:
 const { height, width } = Dimensions.get("window");
 const S05_SECOND_IN_MS = 500;
 const S02_SECOND_IN_MS = 200;
@@ -25,7 +25,7 @@ const PATTERN2 = [
   1 * S05_SECOND_IN_MS,
 ];
 const PATTERN3 = [1 * S02_SECOND_IN_MS, 1 * S02_SECOND_IN_MS];
-
+//FUNCTION HERE:
 export default function Progressor({
   setCounting,
   timeValues,
@@ -34,13 +34,13 @@ export default function Progressor({
   times,
 }) {
   const [isPaused, setIsPaused] = React.useState(false);
-  const [progress, setProgress] = React.useState(1);
-  const [amount, setAmount] = React.useState(1);
-  const [loop, setLoop] = React.useState(true);
-  const [yellow, setYellow] = React.useState(true);
-  const positionRef = React.useRef(0);
+  const [progress, setProgress] = React.useState(1); //progresbar value
+  const [amount, setAmount] = React.useState(1); //currently handled time amount
+  const [loop, setLoop] = React.useState(true); //trigger for coutdown loop reset
+  const [yellow, setYellow] = React.useState(true); //for styling
+  const positionRef = React.useRef(0); //where in the object array we are
 
-  //create text based on current work/rest set
+  //create text based on current work/rest set. Used above timer view
   function makeStringPattern() {
     const pos = Math.floor(positionRef.current);
     const slot = times[pos];
@@ -51,14 +51,12 @@ export default function Progressor({
   function onEnd() {
     Vibration.vibrate(PATTERN);
     setProgress(1);
-    //otherwise move to the next element
-
     setYellow(!yellow);
     setTimeValues((original) => [...original.slice(1)]);
     positionRef.current += 0.5;
   }
 
-  //updates timer amounts as long as there's slots, else vibrate, reset and switch
+  //updates timer amounts as long as there's slots, else vibrate, reset, switch
   //screens:
   React.useEffect(() => {
     //end and switch screens if this was the last element
@@ -67,9 +65,9 @@ export default function Progressor({
       setIsPaused(true);
       //recalculate values based on used up list
       setTimes((original) => [...original]);
-      setCounting((el) => !el);
+      setCounting((el) => !el); //this switches screens
     }
-    setAmount(() => timeValues[0]);
+    setAmount(() => timeValues[0]); //new time to count down
     setLoop((original) => !original); //force countdown restart
   }, [timeValues]);
 
