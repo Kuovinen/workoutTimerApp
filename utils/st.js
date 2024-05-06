@@ -13,6 +13,7 @@ const st = {
   lg: 24,
   xl: 32,
   xxl: 40,
+  xxxls: 60,
   xxxl: 80,
 };
 export default st;

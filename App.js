@@ -1,14 +1,15 @@
 import { StyleSheet, Platform, SafeAreaView, StatusBar } from "react-native";
-
+import React from "react";
 import st from "./utils/st";
 import Progressor from "./components/Progressor";
 import Manager from "./components/Manager";
 import { View } from "react-native";
 export default function App() {
+  const [counting, setCounting] = React.useState(false);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.stripe}></View>
-      <Manager />
+      {!counting ? <Manager setCounting={setCounting} /> : <Progressor />}
     </SafeAreaView>
   );
 }
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
   },
   stripe: {
     height: Platform.OS === "android" ? StatusBar.currentHeight + 6 : 0,
-    backgroundColor: st.light,
+    backgroundColor: st.dark,
     borderColor: st.bkg,
     borderBottomWidth: 1,
   },

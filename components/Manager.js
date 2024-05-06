@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, ScrollView } from "react-native";
 import NumInput from "./NumInput";
 import Button from "./Button";
 import st from "../utils/st";
-export default function Manager() {
+export default function Manager(props) {
   const [times, setTimes] = React.useState([]);
   const [restTime, setRestTime] = React.useState({ min: "00", sec: "00" });
   const [workTime, setWorkTime] = React.useState({ min: "00", sec: "00" });
@@ -74,7 +74,13 @@ export default function Manager() {
             />
           </View>
           <View style={styles.buttonContainer}>
-            <Button title={" BEGIN "} size={st.xxl} onPress={() => {}} />
+            <Button
+              title={" BEGIN "}
+              size={st.xxl}
+              onPress={() => {
+                props.setCounting((el) => !el);
+              }}
+            />
           </View>
         </View>
       </View>
