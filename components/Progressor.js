@@ -1,9 +1,31 @@
 import React from "react";
-import { StyleSheet, Text, View, Dimensions } from "react-native";
+import { StyleSheet, Text, View, Dimensions, Vibration } from "react-native";
 import { ProgressBar } from "react-native-paper";
 import st from "../utils/st";
+import Countdown from "./Countdown";
+import ButtonRound from "./ButtonRound";
+
 const { height, width } = Dimensions.get("window");
-export default function Progressor() {
+const ONE_SECOND_IN_MS = 1000;
+const PATTERN = [
+  1 * ONE_SECOND_IN_MS,
+  1 * ONE_SECOND_IN_MS,
+  1 * ONE_SECOND_IN_MS,
+  1 * ONE_SECOND_IN_MS,
+  1 * ONE_SECOND_IN_MS,
+];
+export default function Progressor(props) {
+  const [isPaused, setIsPaused] = React.useState(false);
+  const [progress, setProgress] = React.useState(0.7);
+  const [minutes, setMinutes] = React.useState(0.1);
+
+  const onEnd = (reset) => {
+    Vibration.vibrate(PATTERN);
+    setIsPaused(true);
+    setProgress(1);
+    reset();
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.section1}>
@@ -22,23 +44,40 @@ export default function Progressor() {
       <View style={styles.section2}>
         <View style={styles.timer}>
           <Text style={styles.currentTimeUnit}>{" 00:00 / 00:00 "}</Text>
-
-          <Text style={styles.timerLetters}>{" 00:00 "}</Text>
-          <View style={{ paddingTop: st.sm }}>
+          <Countdown
+            minutes={minutes}
+            isPaused={isPaused}
+            onProgress={(progress) => {
+              setProgress(progress);
+            }}
+            onEnd={onEnd}
+          />
+          <View
+            style={{
+              paddingTop: st.sm,
+              width: "100%",
+            }}
+          >
             <ProgressBar
-              progress={1}
+              progress={progress}
               color={st.light}
-              style={{ height: st.sm }}
+              style={styles.progress}
             />
           </View>
         </View>
         <View style={styles.buttons}>
-          <View style={styles.roundButton}>
-            <Text style={styles.buttonLetters}>{" || "}</Text>
-          </View>
-          <View style={styles.roundButton}>
-            <Text style={styles.buttonLetters}>{" NEW "}</Text>
-          </View>
+          <ButtonRound
+            title={isPaused ? "START" : "PAUSE"}
+            onPress={() => {
+              setIsPaused((el) => !el);
+            }}
+          />
+          <ButtonRound
+            title={" NEW "}
+            onPress={() => {
+              props.setCounting((el) => !el);
+            }}
+          />
         </View>
       </View>
     </View>
@@ -50,7 +89,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: st.bkg,
     flexDirection: "row",
-
     justifyContent: "center",
   },
   section1: {
@@ -159,7 +197,7 @@ const styles = StyleSheet.create({
     flex: 1,
     color: st.light,
     alignItems: "center",
-    marginTop: st.xxxl,
+    marginTop: st.xxl,
   },
 
   currentTimeUnit: {
@@ -174,7 +212,13 @@ const styles = StyleSheet.create({
     color: st.light,
     backgroundColor: st.btn,
   },
-  buttons: { alignItems: "center", flex: 2 },
+  progress: {
+    height: st.sm,
+    color: st.light,
+    backgroundColor: st.btn,
+    marginTop: st.sm,
+  },
+  buttons: { alignItems: "center", justifyContent: "center", flex: 2 },
   roundButton: {
     height: height / 4,
     width: height / 4,
