@@ -15,7 +15,7 @@ export default function Manager({ times, setTimes, setCounting }) {
       Number(workTime.sec) > 0
     ) {
       setTimes((current) => {
-        return [...current, { work: workTime, rest: restTime }];
+        return [...current, { rest: restTime, work: workTime }];
       });
     }
   }
@@ -36,9 +36,9 @@ export default function Manager({ times, setTimes, setCounting }) {
         {times.map((el, index) => (
           <View key={el + index} style={styles.timeUnit}>
             <Text style={styles.timetext}>
-              {`${index + 1 < 10 ? "0" + (index + 1) : index + 1}   W ${
-                el.work.min
-              }:${el.work.sec} - R ${el.rest.min}:${el.rest.sec}`}
+              {`${index + 1 < 10 ? "0" + (index + 1) : index + 1} R ${
+                el.rest.min
+              }:${el.rest.sec} - W ${el.work.min}:${el.work.sec}`}
             </Text>
           </View>
         ))}
@@ -47,20 +47,20 @@ export default function Manager({ times, setTimes, setCounting }) {
         <View style={styles.inputsContainter}>
           <View style={styles.subinput}>
             <Text style={styles.textInputTitle} adjustsFontSizeToFit>
-              WORKOUT
-            </Text>
-            <View style={styles.inputs}>
-              <NumInput target="min" value={workTime} setValue={setWorkTime} />
-              <NumInput target="sec" value={workTime} setValue={setWorkTime} />
-            </View>
-          </View>
-          <View style={styles.subinput}>
-            <Text style={styles.textInputTitle} adjustsFontSizeToFit>
               REST
             </Text>
             <View style={styles.inputs}>
               <NumInput target="min" value={restTime} setValue={setRestTime} />
               <NumInput target="sec" value={restTime} setValue={setRestTime} />
+            </View>
+          </View>
+          <View style={styles.subinput}>
+            <Text style={styles.textInputTitle} adjustsFontSizeToFit>
+              WORKOUT
+            </Text>
+            <View style={styles.inputs}>
+              <NumInput target="min" value={workTime} setValue={setWorkTime} />
+              <NumInput target="sec" value={workTime} setValue={setWorkTime} />
             </View>
           </View>
         </View>
