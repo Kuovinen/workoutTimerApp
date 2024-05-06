@@ -23,6 +23,6 @@ const styles = StyleSheet.create({
     color: st.light,
     alignSelf: "center",
     textAlign: "justify",
-    fontSize: st.lg,
+    fontSize: st.xl,
   },
 });
