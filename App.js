@@ -11,6 +11,7 @@ import Progressor from "./components/Progressor";
 import Manager from "./components/Manager";
 
 export default function App() {
+  console.log("render APP");
   const [times, setTimes] = React.useState([]);
   const [timeValues, setTimeValues] = React.useState([]);
   const [counting, setCounting] = React.useState(false);
@@ -30,7 +31,6 @@ export default function App() {
       const rtotal = rvalueMin + rvalueSec;
       finalArray.push(rtotal);
     });
-    console.log(finalArray);
     return finalArray;
   }
 
@@ -44,7 +44,12 @@ export default function App() {
       {!counting ? (
         <Manager setCounting={setCounting} times={times} setTimes={setTimes} />
       ) : (
-        <Progressor setCounting={setCounting} timeValues={timeValues} />
+        <Progressor
+          setCounting={setCounting}
+          timeValues={timeValues}
+          setTimeValues={setTimeValues}
+          setTimes={setTimes}
+        />
       )}
     </SafeAreaView>
   );

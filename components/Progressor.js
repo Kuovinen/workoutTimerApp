@@ -1,33 +1,64 @@
 import React from "react";
-import { StyleSheet, Text, View, Dimensions, Vibration } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  Vibration,
+  Platform,
+} from "react-native";
 import { ProgressBar } from "react-native-paper";
 import st from "../utils/st";
 import Countdown from "./Countdown";
 import ButtonRound from "./ButtonRound";
 
 const { height, width } = Dimensions.get("window");
-const ONE_SECOND_IN_MS = 1000;
-const PATTERN = [
-  1 * ONE_SECOND_IN_MS,
-  1 * ONE_SECOND_IN_MS,
-  1 * ONE_SECOND_IN_MS,
-  1 * ONE_SECOND_IN_MS,
-  1 * ONE_SECOND_IN_MS,
+const S05_SECOND_IN_MS = 500;
+const S02_SECOND_IN_MS = 200;
+const S01_SECOND_IN_MS = 100;
+
+const PATTERN = [1 * S01_SECOND_IN_MS, 1 * S02_SECOND_IN_MS];
+const PATTERN2 = [
+  1 * S01_SECOND_IN_MS,
+  1 * S02_SECOND_IN_MS,
+  1 * S01_SECOND_IN_MS,
+  1 * S05_SECOND_IN_MS,
 ];
-export default function Progressor({ setCounting, timeValues }) {
-  const initialMinutes = Math.floor(timeValues[0] / 1000 / 60) % 60;
-  console.log(`Minutes to count ${initialMinutes}`);
+const PATTERN3 = [1 * S02_SECOND_IN_MS, 1 * S02_SECOND_IN_MS];
+export default function Progressor({
+  setCounting,
+  timeValues,
+  setTimeValues,
+  setTimes,
+}) {
+  console.log(timeValues);
   const [isPaused, setIsPaused] = React.useState(false);
-  const [progress, setProgress] = React.useState(0.7);
-  const [minutes, setMinutes] = React.useState(initialMinutes);
-
-  const onEnd = (reset) => {
+  const [progress, setProgress] = React.useState(1);
+  const [amount, setAmount] = React.useState(1);
+  const [yellow, setYellow] = React.useState(true);
+  console.log(`Amount ${amount}`);
+  function onEnd() {
     Vibration.vibrate(PATTERN);
-    setIsPaused(true);
     setProgress(1);
-    reset();
-  };
-
+    //otherwise move to the next element
+    console.log(`Setting ${timeValues} array to ${[...timeValues.slice(1)]}`);
+    setYellow(!yellow);
+    setTimeValues((original) => [...original.slice(1)]);
+  }
+  //updates timer amounts as long as there's slots, else vibrate, reset and switch
+  //screens:
+  React.useEffect(() => {
+    //end and switch screens if this was the last element
+    if (timeValues.length === 0) {
+      console.log(Platform.OS);
+      Vibration.vibrate(Platform.OS === "android" ? PATTERN2 : PATTERN3);
+      setIsPaused(true);
+      //recalculate values based on used up list
+      setTimes((original) => [...original]);
+      setCounting((el) => !el);
+    }
+    setAmount(() => timeValues[0]);
+  }, [timeValues]);
   return (
     <View style={styles.container}>
       <View style={styles.section1}>
@@ -47,12 +78,13 @@ export default function Progressor({ setCounting, timeValues }) {
         <View style={styles.timer}>
           <Text style={styles.currentTimeUnit}>{" 00:00 / 00:00 "}</Text>
           <Countdown
-            minutes={minutes}
+            amount={amount}
             isPaused={isPaused}
             onProgress={(progress) => {
               setProgress(progress);
             }}
             onEnd={onEnd}
+            yellow={yellow}
           />
           <View
             style={{
