@@ -10,6 +10,7 @@ export default function Countdown({
   onProgress,
   onEnd,
   yellow,
+  loop,
 }) {
   const interval = React.useRef(null);
   const [millis, setMillis] = React.useState(null); //used for progressbar calc
@@ -24,20 +25,17 @@ export default function Countdown({
       }
       //OTHERWISE
       const timeLeft = currentTimeMillis - 1000;
-      console.log("tik");
       return timeLeft;
     });
   }
   //when minutes prop changes starts the ENTIRE thing by changing the MILLIS trigger
   React.useEffect(() => {
-    console.log(`set ${amount} millis!`);
     setMillis(amount);
-  }, [amount]);
+  }, [loop]);
 
   //progres bar value adjuster:
   React.useEffect(() => {
     onProgress(millis / amount);
-    console.log("Current millis: " + millis);
   }, [millis]);
 
   //MAIN TIME LOOP CONTROL, triggered by isPaused state

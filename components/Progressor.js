@@ -36,6 +36,7 @@ export default function Progressor({
   const [isPaused, setIsPaused] = React.useState(false);
   const [progress, setProgress] = React.useState(1);
   const [amount, setAmount] = React.useState(1);
+  const [loop, setLoop] = React.useState(true);
   const [yellow, setYellow] = React.useState(true);
   const positionRef = React.useRef(0);
 
@@ -46,7 +47,7 @@ export default function Progressor({
     const total = times.length - pos;
     return `${total} ${slot.rest.min}:${slot.rest.sec}/${slot.work.min}:${slot.work.sec}`;
   }
-
+  //END OF INDIVIDUAL TIMER INSTANCES Rest+Work, NOT ENTIRE SET
   function onEnd() {
     Vibration.vibrate(PATTERN);
     setProgress(1);
@@ -69,6 +70,7 @@ export default function Progressor({
       setCounting((el) => !el);
     }
     setAmount(() => timeValues[0]);
+    setLoop((original) => !original); //force countdown restart
   }, [timeValues]);
 
   return (
@@ -79,6 +81,7 @@ export default function Progressor({
           <Text style={styles.currentTimeUnit}>{makeStringPattern()}</Text>
           <Countdown
             amount={amount}
+            loop={loop}
             isPaused={isPaused}
             onProgress={(progress) => {
               setProgress(progress);
