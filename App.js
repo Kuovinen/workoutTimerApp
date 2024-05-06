@@ -22,14 +22,14 @@ export default function App() {
     const minutesToMillis = (min) => min * 1000 * 60;
     const secondsToMillis = (sec) => sec * 1000;
     textTimes.forEach((el) => {
-      const wvalueMin = minutesToMillis(Number(el.work.min));
-      const wvalueSec = secondsToMillis(Number(el.work.sec));
-      const wtotal = wvalueMin + wvalueSec;
-      finalArray.push(wtotal);
       const rvalueMin = minutesToMillis(Number(el.rest.min));
       const rvalueSec = secondsToMillis(Number(el.rest.sec));
       const rtotal = rvalueMin + rvalueSec;
       finalArray.push(rtotal);
+      const wvalueMin = minutesToMillis(Number(el.work.min));
+      const wvalueSec = secondsToMillis(Number(el.work.sec));
+      const wtotal = wvalueMin + wvalueSec;
+      finalArray.push(wtotal);
     });
     return finalArray;
   }
@@ -49,6 +49,7 @@ export default function App() {
           timeValues={timeValues}
           setTimeValues={setTimeValues}
           setTimes={setTimes}
+          times={times}
         />
       )}
     </SafeAreaView>
