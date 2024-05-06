@@ -3,15 +3,22 @@ import { StyleSheet, Text, View, ScrollView } from "react-native";
 import NumInput from "./NumInput";
 import Button from "./Button";
 import st from "../utils/st";
-export default function Manager(props) {
-  const [times, setTimes] = React.useState([]);
+export default function Manager({ times, setTimes }) {
   const [restTime, setRestTime] = React.useState({ min: "00", sec: "00" });
   const [workTime, setWorkTime] = React.useState({ min: "00", sec: "00" });
   const scrollViewRef = React.useRef();
   function addTime() {
-    setTimes((current) => {
-      return [...current, { work: workTime, rest: restTime }];
-    });
+    console.log(Number(restTime.min));
+    if (
+      Number(restTime.min) > 0 ||
+      Number(restTime.sec) > 0 ||
+      Number(workTime.min) > 0 ||
+      Number(workTime.sec) > 0
+    ) {
+      setTimes((current) => {
+        return [...current, { work: workTime, rest: restTime }];
+      });
+    }
   }
   function removeTime() {
     setTimes((current) => {
@@ -78,7 +85,9 @@ export default function Manager(props) {
               title={" BEGIN "}
               size={st.xxl}
               onPress={() => {
-                props.setCounting((el) => !el);
+                if (times.length) {
+                  props.setCounting((el) => !el);
+                }
               }}
             />
           </View>

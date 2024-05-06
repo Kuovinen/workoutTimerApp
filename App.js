@@ -11,14 +11,15 @@ import Progressor from "./components/Progressor";
 import Manager from "./components/Manager";
 
 export default function App() {
+  const [times, setTimes] = React.useState([]);
   const [counting, setCounting] = React.useState(false);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.stripe}></View>
       {!counting ? (
-        <Manager setCounting={setCounting} />
+        <Manager setCounting={setCounting} times={times} setTimes={setTimes} />
       ) : (
-        <Progressor setCounting={setCounting} />
+        <Progressor setCounting={setCounting} times={times} />
       )}
     </SafeAreaView>
   );
